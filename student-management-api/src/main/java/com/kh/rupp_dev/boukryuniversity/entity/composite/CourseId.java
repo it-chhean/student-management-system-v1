@@ -1,0 +1,25 @@
+package com.kh.rupp_dev.boukryuniversity.entity.composite;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CourseId implements Serializable {
+
+
+    @Column(name = "semester_id")
+    private Long semesterId;
+
+    @Column(name = "subject_id")
+    private Long subjectId;
+
+}
