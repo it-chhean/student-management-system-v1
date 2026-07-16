@@ -1,6 +1,6 @@
 name: Java Spring Boot CI/CD Pipeline
 
-# ចាប់ផ្ដើមដំណើរការនៅពេលមានសកម្មភាពលើ branch main និង dev
+# Start process when have an actions on main and dev branch
 on:
   push:
     branches: [ "main", "dev" ]
@@ -12,22 +12,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. ទាញយកកូដពី GitHub Repository មកកាន់ Runner
+    # 1. Pull source code from GitHub Repo come to Runner
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    # 2. ដំឡើង JDK (សូមប្ដូរ java-version ទៅតាមជំនាន់ project របស់អ្នក ឧទាហរណ៍៖ 17 ឬ 21)
+    # 2. Installation JDK
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '17' # កែប្រែត្រង់នេះបើប្រើ Java 21
+        java-version: '21'
         distribution: 'temurin'
-        cache: maven # ជួយឱ្យការ build លើកក្រោយៗលឿនជាងមុន (ប្ដូរទៅ gradle បើប្រើ Gradle)
+        cache: maven
 
-    # 3. បើកសិទ្ធិឱ្យ execute file mvnw (សម្រាប់តែ Linux/macOS)
+    # 3. Grant execution permission for mvnw
     - name: Grant execute permission for mvnw
       run: chmod +x mvnw
 
-    # 4. រត់ការ Compile និង Test កូដទាំងអស់ (បើមាន Error វានឹងហាមឃាត់មិនឱ្យ Merge)
+    # 4. Run complication and tests for all code (if there are errors, merging will be blocked)
     - name: Build and Test with Maven
       run: ./mvnw clean verify

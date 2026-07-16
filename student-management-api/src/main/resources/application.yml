@@ -9,9 +9,9 @@ app:
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:4321/SM}
-    username: ${DB_USERNAME:SMUSER}
-    password: ${DB_PASSWORD:SMPW}
+    url: ${DB_URL:jdbc:postgresql://localhost:4321/sms_db_26}
+    username: ${DB_USERNAME:Chhean}
+    password: ${DB_PASSWORD:Chhean168}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -42,7 +42,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: namtola4444@gmail.com
+    username: bchhean8@gmail.com
     password: zckf kihg bmpi azai
     properties:
       mail:
@@ -69,11 +69,10 @@ springdoc:
   api-docs:
     path: /v3/api-docs
     enabled: true
-  packages-to-scan: com.rupp.tola.dev.scoring_management_system
 
-uploads:
-  department: /home/chamreunvira/Desktop/rupp-system-api/uploads/department
-  subject: /home/chamreunvira/Desktop/rupp-system-api/uploads/subject
+#uploads:
+#  department: /home/chamreunvira/Desktop/rupp-system-api/uploads/department
+#  subject: /home/chamreunvira/Desktop/rupp-system-api/uploads/subject
 
 attendance:
   jwt:

@@ -1,0 +1,36 @@
+package com.kh.rupp_dev.studentmanagement.entity;
+
+import com.kh.rupp_dev.studentmanagement.audit.AuditListener;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@Entity
+@Table(name = "tbl_class")
+@Getter
+@Setter
+@NoArgsConstructor
+@EntityListeners(AuditListener.class)
+public class Class extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "class_id")
+    private Long id;
+
+    @Column(name = "class_name", nullable = false)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    @Column(name = "academic_year", nullable = false)
+    private String academicYear;
+
+    @Column(name = "generation", nullable = false)
+    private Integer generation;
+
+}

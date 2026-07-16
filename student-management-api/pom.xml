@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<!-- ================= Parent ================= -->
+    <!--  Parent  -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -13,28 +13,26 @@
 		<relativePath />
 	</parent>
 
-	<!-- ================= Project Info ================= -->
+    <!--  Project Info  -->
 	<groupId>com.rupp.tola.dev</groupId>
 	<artifactId>scoring_management_system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>scoring_management_system</name>
 	<description>Scoring Management System</description>
 
-	<!-- ================= Properties ================= -->
+    <!--  Properties  -->
 	<properties>
 		<java.version>21</java.version>
 	</properties>
 
-	<!-- ================= Dependencies ================= -->
+    <!--  Dependencies  -->
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-
-		<!-- ===== Spring Boot Core ===== -->
+        <!--  Spring Boot  Core -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
@@ -60,7 +58,7 @@
 			<version>4.0.3</version>
 		</dependency>
 
-		<!--	Spring Validation	-->
+		<!-- Spring Validation	-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
@@ -80,7 +78,7 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- =====H2 Database ===== -->
+        <!-- H2 Database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -93,7 +91,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- ===== JWT ===== -->
+        <!-- jwt -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
@@ -112,7 +110,7 @@
 		</dependency>
 
 
-		<!-- ===== Lombok ===== -->
+        <!--   Lombok     -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -131,7 +129,7 @@
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
 
-		<!-- ===== Testing ===== -->
+        <!--    Testing    -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -152,7 +150,7 @@
 
 	</dependencies>
 
-	<!-- ================= Build Plugins ================= -->
+    <!--  Build Plugins  -->
 	<build>
 		<plugins>
 
