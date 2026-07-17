@@ -25,7 +25,7 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private Long id;
+	private Integer id;
 
 	@Column(name = "user_name", length = 25, nullable = false, unique = true)
 	private String fullName;
@@ -48,15 +48,6 @@ public class User implements UserDetails {
 	@Column(name = "verified", nullable = false)
 	private boolean verified;
 
-	@Column(name = "otp")
-	private String otp;
-
-	@Column(name = "is_otp_verified")
-	private boolean verifiedOtp;
-
-	@Column(name = "expiry_opt")
-	private Instant expiryOtp;
-
 	@Column(name = "user_login_attempt")
 	private int attempt;
 
@@ -73,9 +64,13 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
 	private RefreshToken refreshToken;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id" , referencedColumnName = "role_id")
-	private Role role;
+    @ManyToMany(fetch =  FetchType.LAZY)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
 	@OneToMany(mappedBy = "instructor" ,  cascade = CascadeType.ALL)
 	private List<Course> courses;
@@ -89,11 +84,13 @@ public class User implements UserDetails {
 	@Override
 	@NullMarked
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		authorities.add(new SimpleGrantedAuthority(role.getName()));
-		role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
-        return authorities;
+        return this.roles;
 	}
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
 
 	@Override
 	@NullMarked
@@ -101,30 +98,4 @@ public class User implements UserDetails {
 		return email;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	/**
-	 * Returns false (account is "locked") when status = false.
-	 * Set status=false after N consecutive failed login attempts.
-	 */
-	@Override
-	public boolean isAccountNonLocked() {
-		return this.status;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	/**
-	 * Only fully-verified users can authenticate.
-	 */
-	@Override
-	public boolean isEnabled() {
-		return this.verified;
-	}
 }

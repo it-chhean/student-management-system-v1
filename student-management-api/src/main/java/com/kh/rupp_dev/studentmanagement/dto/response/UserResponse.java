@@ -1,11 +1,14 @@
 package com.kh.rupp_dev.studentmanagement.dto.response;
 
+import com.kh.rupp_dev.studentmanagement.entity.Role;
+import jakarta.persistence.SecondaryTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +16,7 @@ import java.time.LocalDate;
 @Builder
 public class UserResponse {
 
-    private Long id;
+    private Integer id;
 
     private String fullName;
 
@@ -31,7 +34,7 @@ public class UserResponse {
 
     private boolean status;
 
-    private String role;
+    private Set<Role> roles;
 
     private int attempt;
 

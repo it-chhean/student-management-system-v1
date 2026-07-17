@@ -27,5 +27,5 @@ public class PermissionRequest {
     @Size(min = 2 , max = 25 , message = "Module must be between t and 25 characters.")
     private String module;
 
-    private Set<Long> roleIds;
+    private Set<Integer> roleIds;
 }

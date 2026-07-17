@@ -95,13 +95,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ExcelException.class)
 	public ResponseEntity<ErrorResponse<?>> handleExcelException(ExcelException ex ) {
-//		var response = UploadErrorResponse
-//				.builder()
-//				.errorMessage(ex.getLocalizedMessage())
-//				.rowNumber()
-//				.rawData()
-//				.createAt()
-//				.build();
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.error(ex.getLocalizedMessage()));
 	}
 

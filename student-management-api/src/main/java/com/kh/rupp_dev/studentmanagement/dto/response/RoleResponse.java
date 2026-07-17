@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class RoleResponse {
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private String status;
-    private List<Long> userIds;
+    private List<Integer> userIds;
 }

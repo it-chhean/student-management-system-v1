@@ -1,9 +1,9 @@
 package com.kh.rupp_dev.studentmanagement.exception;
 
-import java.util.NoSuchElementException;
+import org.springframework.http.HttpStatus;
 
-public class ResourceNotFoundException extends NoSuchElementException {
-	public ResourceNotFoundException(String message) {
-		super(message);
-	}
+public class ResourceNotFoundException extends AppException {
+    public ResourceNotFoundException(String message) {
+        super(HttpStatus.NOT_FOUND, message);
+    }
 }

@@ -1,7 +1,9 @@
 package com.kh.rupp_dev.studentmanagement.exception;
 
-public class DuplicateResourceException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class DuplicateResourceException extends AppException {
     public DuplicateResourceException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT, message);
     }
 }

@@ -61,7 +61,7 @@ public class SecurityConfig {
 				.formLogin(login -> {
 					login.failureHandler(loginFailureHandler);
 					login.successHandler(loginSuccessHandler);
-//					login.disable();
+					login.disable();
 				})
 				.cors(cors -> cors.configurationSource(configurationSource()))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

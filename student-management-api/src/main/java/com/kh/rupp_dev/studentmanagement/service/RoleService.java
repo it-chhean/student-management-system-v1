@@ -5,25 +5,26 @@ import java.util.List;
 import com.kh.rupp_dev.studentmanagement.dto.request.AssignPermissionRequest;
 import com.kh.rupp_dev.studentmanagement.dto.request.RoleRequest;
 import com.kh.rupp_dev.studentmanagement.dto.response.RoleResponse;
+import org.apache.poi.ss.formula.eval.IntersectionEval;
 
 public interface RoleService {
 
 	RoleResponse create(RoleRequest request);
 
-	RoleResponse update(Long id ,RoleRequest request);
+	RoleResponse update(Integer id , RoleRequest request);
 
 	List<RoleResponse> findAll();
 
-	RoleResponse findById(Long id);
+	RoleResponse findById(Integer id);
 
-	void updateStatus(Long id, String status);
+	void updateStatus(Integer id, String status);
 
 	List<RoleResponse> findByActive(String status);
 
-	RoleResponse addPermission(Long roleId , AssignPermissionRequest request);
+	RoleResponse addPermission(Integer roleId , AssignPermissionRequest request);
 
-	RoleResponse setPermission(Long roleId , AssignPermissionRequest request);
+	RoleResponse setPermission(Integer roleId , AssignPermissionRequest request);
 
-	void deletePermission(Long roleId , Long permissionId);
+	void deletePermission(Integer roleId , Integer permissionId);
 
 }

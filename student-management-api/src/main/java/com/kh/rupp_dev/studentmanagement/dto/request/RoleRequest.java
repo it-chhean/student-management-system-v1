@@ -25,5 +25,5 @@ public class RoleRequest {
 
     private String status;
 
-    private List<Long> userIds;
+    private List<Integer> userIds;
 }

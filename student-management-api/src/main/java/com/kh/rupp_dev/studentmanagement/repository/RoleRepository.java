@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.rupp_dev.studentmanagement.entity.Role;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
 
 	Optional<Role> findByName(String name);
 
@@ -20,7 +20,7 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
 	Optional<Role> findByNameAndStatus(String name, String name1);
 
-	boolean existsByNameAndIdNot(String roleName, Long id);
+	boolean existsByNameAndIdNot(String roleName, Integer id);
 
-	Set<Role> findByIdIn(Set<Long> uuids);
+	Set<Role> findByIdIn(Set<Integer> uuids);
 }

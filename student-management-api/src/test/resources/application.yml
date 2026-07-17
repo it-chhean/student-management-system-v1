@@ -8,10 +8,7 @@ spring:
         hibernate:
             ddl-auto: create-drop
         show-sql: true
-    h2:
-        console:
-            enabled: true
 
 jwt:
     secret: test-secret-key
-    expiration-ms: 86400000 # Changed from 'expiration' to 'expiration-ms'
+    expiration-ms: 86400000

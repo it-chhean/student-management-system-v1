@@ -1,9 +1,7 @@
 package com.kh.rupp_dev.studentmanagement.security.impl;
 
 import com.kh.rupp_dev.studentmanagement.dto.request.AuthRequest;
-import com.kh.rupp_dev.studentmanagement.dto.request.ResetPasswordRequest;
 import com.kh.rupp_dev.studentmanagement.dto.request.UserRequest;
-import com.kh.rupp_dev.studentmanagement.dto.request.VerifyOtpRequest;
 import com.kh.rupp_dev.studentmanagement.dto.response.UserResponse;
 import com.kh.rupp_dev.studentmanagement.entity.RefreshToken;
 import com.kh.rupp_dev.studentmanagement.entity.Role;
@@ -14,7 +12,6 @@ import com.kh.rupp_dev.studentmanagement.exception.ResourceNotFoundException;
 import com.kh.rupp_dev.studentmanagement.jwt.JwtService;
 import com.kh.rupp_dev.studentmanagement.repository.RoleRepository;
 import com.kh.rupp_dev.studentmanagement.service.RefreshTokenService;
-import com.kh.rupp_dev.studentmanagement.utils.Util;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,14 +27,10 @@ import org.springframework.stereotype.Service;
 
 import com.kh.rupp_dev.studentmanagement.mapper.UserMapper;
 import com.kh.rupp_dev.studentmanagement.repository.UserRepository;
-import com.kh.rupp_dev.studentmanagement.service.EmailService;
 import com.kh.rupp_dev.studentmanagement.security.AuthService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.*;
 
 @Slf4j
 @Service
@@ -46,7 +39,6 @@ public class AuthServiceImpl implements AuthService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final EmailService emailService;
 	private final UserMapper userMapper;
 	private final JwtService jwtService;
 	private final AuthenticationManager authenticationManager;
@@ -67,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.getEmail()));
 
 		if(!user.isStatus()) {
-			log.info("User has been freeze with status: {}" , user.isStatus());
+			log.info("User has been freeze with status: {}" , false);
 			throw new RuntimeException("User has been freeze with status: " + user.isStatus());
 		}
 
@@ -97,26 +89,6 @@ public class AuthServiceImpl implements AuthService {
 		return response;
 	}
 
-	@Override
-	public UserResponse verifyEmail(String token) {
-		String userEmail = jwtService.extractEmail(token);
-		User user = userRepository.findByEmail(userEmail)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
-		if (jwtService.isTokenExpiration(token) && !token.equals(user.getVerificationToken())) {
-			throw new JwtException("Jwt token is Expiry or isn't correct.");
-		}
-
-		if (user.isVerified()) {
-			throw new IllegalStateException("User account is already verify.");
-		}
-
-		user.setVerificationToken(null);
-		user.setVerified(true);
-		userRepository.save(user);
-
-		return toResponse(user);
-	}
-
 	private UserResponse handleExistingUser(User existingUser) {
 		if (existingUser.isVerified()) {
 			throw new IllegalStateException("User already exists and is verified");
@@ -124,7 +96,6 @@ public class AuthServiceImpl implements AuthService {
 		String token = jwtService.generateToken(existingUser.getEmail());
 		existingUser.setVerificationToken(token);
 		userRepository.save(existingUser);
-		emailService.sendVerificationEmail(existingUser.getEmail(), token);
 		return toResponse(existingUser);
 	}
 
@@ -147,72 +118,11 @@ public class AuthServiceImpl implements AuthService {
 		user.setRole(role);
 		log.info("New user created: {}", user);
 		User saved = userRepository.save(user);
-		emailService.sendVerificationEmail(saved.getEmail(), saved.getVerificationToken());
 		return toResponse(saved);
 	}
 
 	@Override
-	public Map<String, Object> sendOtpResetPassword(String email) {
-		try {
-			String otp = Util.generateOtp();
-			emailService.sendOtpResetPassword(email, otp);
-			User user = userRepository.findByEmail(email)
-					.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-			user.setOtp(otp);
-			user.setExpiryOtp(Instant.now().plusSeconds(600));
-			log.info("OTP have been you email please check you box.");
-			userRepository.save(user);
-			return Map.of("email", user.getEmail(), "otp", otp);
-		} catch (Exception e) {
-			throw new RuntimeException("Something went wrong");
-		}
-	}
-
-	@Override
-	public Map<String, Object> verifyOtpResetPassword(String token, VerifyOtpRequest request) {
-		String userEmail = jwtService.extractEmail(token);
-		User user = userRepository.findByEmail(userEmail)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
-		if (request.getOtp() == null || !request.getOtp().equals(user.getOtp())) {
-			throw new RuntimeException("OTP is not matching.");
-		}
-		if (user.getExpiryOtp().isBefore(Instant.now())) {
-			throw new RuntimeException("OTP is expired.");
-		}
-		user.setVerifiedOtp(true);
-		user.setOtp(null);
-		log.info("OTP verified successfully.");
-		userRepository.save(user);
-		return Map.of("userEmail", user.getEmail(), "verifiedOtp", user.isVerifiedOtp());
-	}
-
-	@Override
-	public UserResponse resetPassword(String token, ResetPasswordRequest request) {
-		String userEmail = jwtService.extractEmail(token);
-		User user = userRepository.findByEmail(userEmail)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
-
-		if (!user.isVerifiedOtp()) {
-			throw new RuntimeException("Your OTP is not verified.");
-		}
-
-		if (user.getExpiryOtp().isBefore(Instant.now())) {
-			user.setVerifiedOtp(false);
-			user.setExpiryOtp(null);
-			userRepository.save(user);
-			throw new RuntimeException("Your OTP is expired you cannot change password.");
-		}
-
-		user.setVerifiedOtp(false);
-		user.setExpiryOtp(null);
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		log.info("Password have been reset by user email {}.", userEmail);
-		userRepository.save(user);
-		return toResponse(user);
-	}
-
-	@Override
-	public void delete(Long id) {
+	public void delete(Integer id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
 		log.info("Delete user with id: {}", id);
@@ -226,17 +136,13 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public User getUser(Long id) {
-		User user = userRepository.findById(id)
+	public User getUser(Integer id) {
+		return userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
-		if (!user.isVerified()) {
-			throw new RuntimeException("User isn't verified account.");
-		}
-		return user;
 	}
 
 	@Override
-	public void updateStatus(Long id, String status) {
+	public void updateStatus(Integer id, String status) {
 		User user = this.findByOrThrow(id);
 		user.setStatus(Boolean.parseBoolean(status));
 		userRepository.save(user);
@@ -253,11 +159,11 @@ public class AuthServiceImpl implements AuthService {
 	private UserResponse toResponse(User user) {
 		UserResponse response = userMapper.toResponse(user);
 		response.setRefreshToken(user.getRefreshToken().getToken());
-		response.setRole(user.getRole().getName());
+		response.setRole(user.getRoles());
 		return response;
 	}
 
-	private User findByOrThrow(Long id) {
+	private User findByOrThrow(Integer id) {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
 	}

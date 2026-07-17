@@ -1,7 +1,9 @@
 package com.kh.rupp_dev.studentmanagement.exception;
 
-public class SessionNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class SessionNotFoundException extends AppException {
     public SessionNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND, message);
     }
 }

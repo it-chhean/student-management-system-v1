@@ -13,6 +13,8 @@ import com.kh.rupp_dev.studentmanagement.repository.PermissionRepository;
 import com.kh.rupp_dev.studentmanagement.repository.RoleRepository;
 import com.kh.rupp_dev.studentmanagement.security.AuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kh.rupp_dev.studentmanagement.service.RoleService;
@@ -51,9 +53,9 @@ public class RoleServiceImpl implements RoleService {
 			Set<User> users = request.getUserIds().stream()
 					.map(userId -> {
 						User user = authService.getUser(userId);
-						if(user != null) {
-							user.setRole(role);
-						}
+                        if (user.getRoles().contains(role)) {
+                            throw new DuplicateResourceException("Role already exists");
+                        }
 						return user;
 					})
 					.collect(Collectors.toSet());
@@ -65,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleResponse update(Long id, RoleRequest request) {
+	public RoleResponse update(Integer id, RoleRequest request) {
 		Role role = findByOrThrow(id);
 
 		if (request.getName() != null) {
@@ -107,14 +109,14 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleResponse findById(Long id) {
+	public RoleResponse findById(Integer id) {
 		Role role = findByOrThrow(id);
 		log.info("Role found with id {}", role.getId());
 		return toResponse(role);
 	}
 
 	@Override
-	public void updateStatus(Long id, String status) {
+	public void updateStatus(Integer id, String status) {
 		Role role = findByOrThrow(id);
 		role.setStatus(status);
 		roleRepository.save(role);
@@ -130,8 +132,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleResponse addPermission(Long roleId, AssignPermissionRequest request) {
-
+	public RoleResponse addPermission(Integer roleId, AssignPermissionRequest request) {
 		Role role = findByOrThrow(roleId);
 		Set<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
 		role.getPermissions().addAll(permissions);
@@ -141,7 +142,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleResponse setPermission(Long roleId, AssignPermissionRequest request) {
+	public RoleResponse setPermission(Integer roleId, AssignPermissionRequest request) {
 		Role role = findByOrThrow(roleId);
 		Set<Permission> permissions = permissionRepository.findByIdIn(request.getPermissionIds());
 		role.getPermissions().clear();
@@ -153,21 +154,21 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public void deletePermission(Long roleId, Long permissionId) {
+	public void deletePermission(Integer roleId, Integer permissionId) {
 		Role role = findByOrThrow(roleId);
-		role.getPermissions().removeIf(permission -> permission.getId().equals(permissionId));
+		role.getPermissions().removeIf(permission -> false);
 		roleRepository.save(role);
 	}
 
-	private Role findByOrThrow(Long roleId) {
-		return roleRepository.findById(roleId)
-				.orElseThrow(() -> new ResourceNotFoundException("Role not found with ID: " + roleId));
+	private Role findByOrThrow(Integer roleId) {
+        return roleRepository.findById(roleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 	}
 
 	private RoleResponse toResponse(Role role) {
 		RoleResponse response = roleMapper.toResponse(role);
 		if(role.getUsers() != null && !role.getUsers().isEmpty()) {
-			List<Long> uuids = role.getUsers().stream()
+			List<Integer> uuids = role.getUsers().stream()
 					.map(User::getId)
 					.toList();
 			response.setUserIds(uuids);

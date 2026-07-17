@@ -16,7 +16,7 @@ public class UploadBatchesResponse {
 
     private Long id;
 
-    private Long userId;
+    private Integer userId;
 
     private String username;
 

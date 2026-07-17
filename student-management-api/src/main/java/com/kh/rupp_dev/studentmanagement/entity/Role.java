@@ -5,6 +5,8 @@ import java.util.*;
 import com.kh.rupp_dev.studentmanagement.audit.AuditListener;
 import jakarta.persistence.*;
 import lombok.*;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "tbl_role")
@@ -12,12 +14,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @EntityListeners(AuditListener.class)
-public class Role {
+public class Role implements GrantedAuthority {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_id")
-	private Long id;
+	private Integer id;
 
 	@Column(name = "role_name", unique = true, nullable = false)
 	private String name;
@@ -32,7 +34,17 @@ public class Role {
 	private Set<User> users = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "permission_id"))
+	@JoinTable(
+            name = "role_permission",
+            joinColumns = @JoinColumn(name = "role_id",
+                    referencedColumnName = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id",
+                    referencedColumnName = "permission_id")
+    )
 	private Set<Permission> permissions = new HashSet<>();
 
+    @Override
+    public @Nullable String getAuthority() {
+        return "ROLE_" + this.name;
+    }
 }
