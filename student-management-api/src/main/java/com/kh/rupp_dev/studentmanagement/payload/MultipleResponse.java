@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class MultipleResponse<T> {
+
     private boolean success;
     private int status;
     private String message;

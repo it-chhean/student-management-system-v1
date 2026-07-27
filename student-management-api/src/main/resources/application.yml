@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /api/v1
 
+
 spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:4321/sms_db_26}
@@ -52,3 +53,7 @@ attendance:
   jwt:
     secret: your-very-long-secret-key-min-32-chars-here!!
     expiry-minutes: '10'
+
+app:
+  cors:
+    allowed-origins: http://localhost:4200,http://localhost:5173,http://localhost:3000

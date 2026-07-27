@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.kh.rupp_dev.studentmanagement.service.AppUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,8 +46,15 @@ public class SecurityConfig {
 	private final CustomLoginFailureHandler loginFailureHandler;
 	private final CustomLoginSuccessHandler loginSuccessHandler;
 
-	private static final String[] PUBLIC_URLS = { "/auth/**", "/oauth2/**" , "/css/**", "/js/**", "/images/**", "/swagger-ui.html",
-			"/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**" , "/uploads/**" };
+	private static final String[] PUBLIC_URLS = {
+            "/auth/**", "/oauth2/**" , "/css/**", "/js/**",
+            "/images/**", "/swagger-ui.html", "/swagger-ui/**",
+            "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources/**",
+            "/webjars/**" , "/uploads/**"
+    };
+
+    @Value("${app.cors.allowed-origins}")
+    private List<String> allowedOrigins;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -63,8 +71,12 @@ public class SecurityConfig {
 					login.successHandler(loginSuccessHandler);
 					login.disable();
 				})
-				.cors(cors -> cors.configurationSource(configurationSource()))
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.cors(cors -> cors
+                        .configurationSource(configurationSource())
+                )
+				.sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 				.authorizeHttpRequests(
 						registry -> registry
 								.requestMatchers(PUBLIC_URLS).permitAll()
@@ -104,14 +116,14 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource configurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(List.of("http://localhost:4200" , "http://localhost:5173" , "http://localhost:3000"));
+        config.setAllowedOrigins(allowedOrigins);
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowedMethods(List.of("*"));
 		config.setAllowCredentials(true);
-
-		UrlBasedCorsConfigurationSource urlCorsConfig = new UrlBasedCorsConfigurationSource();
-		urlCorsConfig.registerCorsConfiguration("/**" , config);
-		return urlCorsConfig;
+        config.setExposedHeaders(List.of("Authorization"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**" , config);
+		return source;
 	}
 
 }

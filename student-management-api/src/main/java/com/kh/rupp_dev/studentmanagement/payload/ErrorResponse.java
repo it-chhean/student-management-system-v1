@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class ErrorResponse<T> {
+
     private boolean success;
     private int status;
     private String message;
