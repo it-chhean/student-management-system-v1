@@ -4,5 +4,25 @@
       "name": "app.cors.allowed-origins",
       "type": "java.lang.String",
       "description": "Description for app.cors.allowed-origins."
-  }
-] }
+    },
+    {
+      "name": "otp.resend-cooldown-seconds",
+      "type": "java.lang.String",
+      "description": "Description for otp.resend-cooldown-seconds."
+    },
+    {
+      "name": "otp.max-attampts",
+      "type": "java.lang.String",
+      "description": "Description for otp.max-attampts."
+    },
+    {
+      "name": "otp.expiry-seconds",
+      "type": "java.lang.String",
+      "description": "Description for otp.expiry-seconds."
+    },
+    {
+      "name": "otp.length",
+      "type": "java.lang.String",
+      "description": "Description for otp.length."
+    }
+  ] }

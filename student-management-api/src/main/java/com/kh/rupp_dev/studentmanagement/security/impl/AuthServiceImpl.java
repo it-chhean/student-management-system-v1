@@ -1,19 +1,27 @@
 package com.kh.rupp_dev.studentmanagement.security.impl;
 
-import com.kh.rupp_dev.studentmanagement.dto.request.AuthRequest;
-import com.kh.rupp_dev.studentmanagement.dto.request.UserRequest;
+import com.kh.rupp_dev.studentmanagement.constant.RoleName;
+import com.kh.rupp_dev.studentmanagement.constant.Status;
+import com.kh.rupp_dev.studentmanagement.dto.request.*;
+import com.kh.rupp_dev.studentmanagement.dto.response.SendOtpRespone;
 import com.kh.rupp_dev.studentmanagement.dto.response.UserResponse;
+import com.kh.rupp_dev.studentmanagement.dto.response.VerifyOtpResponse;
 import com.kh.rupp_dev.studentmanagement.entity.RefreshToken;
 import com.kh.rupp_dev.studentmanagement.entity.Role;
 import com.kh.rupp_dev.studentmanagement.entity.User;
-import com.kh.rupp_dev.studentmanagement.constant.RoleName;
-import com.kh.rupp_dev.studentmanagement.constant.Status;
 import com.kh.rupp_dev.studentmanagement.exception.ResourceNotFoundException;
 import com.kh.rupp_dev.studentmanagement.jwt.JwtService;
+import com.kh.rupp_dev.studentmanagement.mapper.UserMapper;
+import com.kh.rupp_dev.studentmanagement.otp.service.EmailService;
 import com.kh.rupp_dev.studentmanagement.repository.RoleRepository;
+import com.kh.rupp_dev.studentmanagement.repository.UserRepository;
+import com.kh.rupp_dev.studentmanagement.security.AuthService;
 import com.kh.rupp_dev.studentmanagement.service.RefreshTokenService;
+import com.kh.rupp_dev.studentmanagement.utils.Util;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,16 +32,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.kh.rupp_dev.studentmanagement.mapper.UserMapper;
-import com.kh.rupp_dev.studentmanagement.repository.UserRepository;
-import com.kh.rupp_dev.studentmanagement.security.AuthService;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Set;
+
+import static java.lang.System.currentTimeMillis;
 
 @Slf4j
 @Service
@@ -47,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final RoleRepository roleRepository;
 	private final RefreshTokenService refreshTokenService;
+    private final EmailService emailService;
 
 	@Override
 	@Transactional
@@ -178,5 +183,73 @@ public class AuthServiceImpl implements AuthService {
 		User user = this.getUserAuthenticated();
 		return userMapper.toResponse(user);
 	}
+
+    @Override
+    public UserResponse changePassword(ChangePasswordRequest request) throws BadRequestException {
+        User user = this.getUserAuthenticated();
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BadRequestException("Password don't match");
+        }
+
+        String newPasswordBCrypt = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(newPasswordBCrypt);
+
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponse resetPassword(ResetPasswordRequest request) {
+        User user = this.getUserAuthenticated();
+        validateOtp(user, request.getOtp());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setResetOptExpireAt(0L);
+        user.setResetOtp(null);
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    @Override
+    public VerifyOtpResponse verifyOtp(String email, String otp) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + email));
+
+        validateOtp(user, otp);
+        validationOtpExpire(user);
+
+        return VerifyOtpResponse
+                .builder()
+                .message("Verify OTP 6 digit successfully.")
+                .email(user.getEmail())
+                .build();
+    }
+
+    @Override
+    public SendOtpRespone sendResetOtp(SendOtpRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found."));
+
+        String otpCode = Util.generateOtp();
+        user.setResetOtp(otpCode);
+        long expireDate = System.currentTimeMillis() + (60 * 5 * 1000);
+        user.setResetOptExpireAt(expireDate);
+        emailService.sendOtpViaEmail(user.getEmail(), otpCode);
+        User saved = userRepository.save(user);
+        return SendOtpRespone
+                .builder()
+                .otp(saved.getResetOtp())
+                .build();
+    }
+
+    private void validateOtp(User user, String otp) {
+        if (user.getResetOtp() == null || !user.getResetOtp().equals(otp)) {
+            throw new IllegalArgumentException("Otp doesn't match");
+        }
+    }
+
+    private void validationOtpExpire(User user) {
+        if (user.getResetOptExpireAt() < currentTimeMillis()) {
+            throw new IllegalArgumentException("Otp is expired");
+        }
+    }
 
 }

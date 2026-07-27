@@ -1,11 +1,14 @@
 package com.kh.rupp_dev.studentmanagement.security;
 
-import com.kh.rupp_dev.studentmanagement.dto.request.AuthRequest;
-import com.kh.rupp_dev.studentmanagement.dto.request.UserRequest;
+import com.kh.rupp_dev.studentmanagement.dto.request.*;
+import com.kh.rupp_dev.studentmanagement.dto.response.SendOtpRespone;
 import com.kh.rupp_dev.studentmanagement.dto.response.UserResponse;
+import com.kh.rupp_dev.studentmanagement.dto.response.VerifyOtpResponse;
 import com.kh.rupp_dev.studentmanagement.entity.User;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 
 public interface AuthService {
 
@@ -52,5 +55,13 @@ public interface AuthService {
      * This me method is display our information.
      *  */
 	UserResponse me();
+
+    UserResponse changePassword(ChangePasswordRequest request) throws BadRequestException;
+
+    UserResponse resetPassword(ResetPasswordRequest request);
+
+    VerifyOtpResponse verifyOtp(String email, String otp);
+
+    SendOtpRespone sendResetOtp(SendOtpRequest request);
 
 }

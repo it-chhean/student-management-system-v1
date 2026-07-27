@@ -15,6 +15,11 @@ public class ResetPasswordRequest {
 
     @NotBlank(message = "Password is required.")
     @Size(min = 5 , message = "Password must be 5 characters up.")
-    private String password;
+    private String newPassword;
 
+    @NotBlank(message = "Comfirm is required.")
+    private String confirmPassword;
+
+    @NotBlank(message = "OTP is required.")
+    private String otp;
 }

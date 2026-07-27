@@ -23,7 +23,7 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("it-Chhean")
-                                .email("chhean@example.com"))
+                                .email("bchhean8@example.com"))
                         .license(new License()
                                 .name("MIT License")))
                 // Adds JWT Bearer Auth button in Swagger UI
