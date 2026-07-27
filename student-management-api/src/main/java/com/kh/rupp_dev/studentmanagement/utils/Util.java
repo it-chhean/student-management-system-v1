@@ -22,9 +22,6 @@ public class Util {
 
     /**
      * update image from multipart file request
-     * @param file
-     * @param dir
-     * @return
      */
     public static String uploadImage(MultipartFile file , String dir) {
         try {
@@ -65,7 +62,6 @@ public class Util {
 
     /**
      * convert fro string like this "2007-02-01" to LocalDate Type
-     * @param data
      */
     public static LocalDate convertToLocalDate(String data) {
         try {
@@ -77,7 +73,6 @@ public class Util {
 
     /**
      * if value null return empty string
-     * @param value
      */
     public static String text(String value) {
         return Objects.toString(value, "");
@@ -85,7 +80,6 @@ public class Util {
 
     /**
      * convert to string Util using with cell each row of Excel file
-     * @param cell
      */
     public static String getCellValueAsString(Cell cell) {
         if (cell == null) {

@@ -37,6 +37,9 @@ public interface AuthService {
 	 */
 	User getUser(Integer id);
 
+    /**
+     * This method use to update Status of auth is avaiable or not.
+     * */
 	void updateStatus(Integer id , String status);
 
 	/**
@@ -45,6 +48,9 @@ public interface AuthService {
 	 */
 	User getUserAuthenticated();
 
+    /**
+     * This me method is display our information.
+     *  */
 	UserResponse me();
 
 }
