@@ -28,7 +28,7 @@ public class AuditLogMapper {
                 .build();
     }
 
-    private Map<String, Object> jsonToMap(String json) {
+    private Map jsonToMap(String json) {
         try {
             if (json == null) {
                 return null;

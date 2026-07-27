@@ -69,13 +69,6 @@ public class AuthController {
 		}
 	}
 
-	@Operation(summary = "Verify email with token.")
-	@GetMapping("/signup/verify")
-	public ResponseEntity<SingleResponse<UserResponse>> verifyEmail(@RequestParam String token) {
-		UserResponse user = authService.verifyEmail(token);
-		return ResponseEntity.ok(SingleResponse.success("Email successfully verified!", user));
-	}
-
 	@Operation(summary = "Retrieve new access token.")
 	@GetMapping("/refresh")
 	public ResponseEntity<SingleResponse<RefreshTokenResponse>> refreshToken(HttpServletRequest request) {

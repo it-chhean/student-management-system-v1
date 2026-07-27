@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class PermissionResponse {
 
-    private Long id;
+    private Integer id;
 
     private String name;
 
@@ -23,6 +23,6 @@ public class PermissionResponse {
 
     private boolean status;
 
-    private List<Long> roleIds;
+    private List<Integer> roleIds;
 
 }

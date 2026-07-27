@@ -18,9 +18,10 @@ public class CourseResponse {
     private String subjectName;
 
     private Long semesterId;
+
     private String semesterName;
 
-    private Long instructorId;
+    private Integer instructorId;
     private String instructorName;
 
     private String name;

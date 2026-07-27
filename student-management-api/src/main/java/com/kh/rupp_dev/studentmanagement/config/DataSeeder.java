@@ -53,7 +53,7 @@ public class DataSeeder implements CommandLineRunner {
             admin.setEmail("virachamreun@gmail.com");
             admin.setPassword(passwordEncoder.encode("Vira168"));
             admin.setVerified(true);
-            admin.setRole(roleAdmin);
+            admin.setRoles(Set.of(roleAdmin));
             admin.setVerificationToken(jwtService.generateToken("virachamreun@gmail.com"));
             RefreshToken refreshToken = refreshTokenService.create();
             refreshToken.setUser(admin);

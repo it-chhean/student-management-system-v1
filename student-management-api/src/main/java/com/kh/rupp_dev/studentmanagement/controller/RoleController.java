@@ -1,9 +1,9 @@
 package com.kh.rupp_dev.studentmanagement.controller;
 
 import com.kh.rupp_dev.studentmanagement.dto.request.AssignPermissionRequest;
-import com.kh.rupp_dev.studentmanagement.payload.SingleResponse;
 import com.kh.rupp_dev.studentmanagement.dto.request.RoleRequest;
 import com.kh.rupp_dev.studentmanagement.dto.response.RoleResponse;
+import com.kh.rupp_dev.studentmanagement.payload.SingleResponse;
 import com.kh.rupp_dev.studentmanagement.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

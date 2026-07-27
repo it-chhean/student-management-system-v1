@@ -5,8 +5,6 @@ import com.kh.rupp_dev.studentmanagement.dto.response.UserResponse;
 import com.kh.rupp_dev.studentmanagement.entity.User;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 public class UserMapper {
 
@@ -38,7 +36,7 @@ public class UserMapper {
                 .verificationToken(user.getVerificationToken())
                 .refreshToken(user.getRefreshToken().getToken())
                 .status(user.isStatus())
-                .role(user.getRoles().toString())
+                .roles(user.getRoles())
                 .attempt(user.getAttempt())
                 .lockTime(user.getLockTime())
                 .build();

@@ -13,8 +13,6 @@ import com.kh.rupp_dev.studentmanagement.repository.PermissionRepository;
 import com.kh.rupp_dev.studentmanagement.repository.RoleRepository;
 import com.kh.rupp_dev.studentmanagement.security.AuthService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.harmony.pack200.NewAttributeBands;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.kh.rupp_dev.studentmanagement.service.RoleService;
@@ -50,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
 
 		role.setName(roleName);
 		if (request.getUserIds() != null) {
-			Set<User> users = request.getUserIds().stream()
+			List<User> users = request.getUserIds().stream()
 					.map(userId -> {
 						User user = authService.getUser(userId);
                         if (user.getRoles().contains(role)) {
@@ -58,7 +56,7 @@ public class RoleServiceImpl implements RoleService {
                         }
 						return user;
 					})
-					.collect(Collectors.toSet());
+					.collect(Collectors.toList());
 			role.setUsers(users);
 		}
 		Role saved = roleRepository.save(role);
@@ -85,13 +83,13 @@ public class RoleServiceImpl implements RoleService {
 		roleMapper.updateFromRequest(role, request);
 
 		if(request.getUserIds() != null && !request.getUserIds().isEmpty()) {
-			Set<User> users = request.getUserIds()
+			List<User> users = request.getUserIds()
 					.stream()
 					.map(authService::getUser)
-					.collect(Collectors.toSet());
+					.collect(Collectors.toList());
 			role.setUsers(users);
 		}else {
-			role.setUsers(new HashSet<>());
+			role.setUsers(new ArrayList<>());
 		}
 
 		Role saved = roleRepository.save(role);

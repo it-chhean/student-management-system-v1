@@ -1,24 +1,22 @@
 package com.kh.rupp_dev.studentmanagement.entity;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-
 import com.kh.rupp_dev.studentmanagement.audit.AuditListener;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "tbl_user")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditListener.class)
 public class User implements UserDetails {
 
@@ -64,9 +62,9 @@ public class User implements UserDetails {
 	@OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
 	private RefreshToken refreshToken;
 
-    @ManyToMany(fetch =  FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "users_roles",
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
@@ -95,7 +93,7 @@ public class User implements UserDetails {
 	@Override
 	@NullMarked
 	public String getUsername() {
-		return email;
+		return this.email;
 	}
 
 }

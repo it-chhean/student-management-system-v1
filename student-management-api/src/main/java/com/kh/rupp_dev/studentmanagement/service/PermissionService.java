@@ -9,13 +9,13 @@ public interface PermissionService {
 
     PermissionResponse create(PermissionRequest request);
 
-    PermissionResponse update(Long id , PermissionRequest request);
+    PermissionResponse update(Integer id , PermissionRequest request);
 
-    void delete(Long id);
+    void delete(Integer id);
 
     List<PermissionResponse> getAll();
 
-    PermissionResponse getById(Long id);
+    PermissionResponse getById(Integer id);
 
     List<PermissionResponse> findByModule(String module);
 }

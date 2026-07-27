@@ -30,16 +30,14 @@ public class Role implements GrantedAuthority {
 	@Column(name = "status")
 	private String status;
 
-	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<User> users = new HashSet<>();
+	@ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
             name = "role_permission",
-            joinColumns = @JoinColumn(name = "role_id",
-                    referencedColumnName = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id",
-                    referencedColumnName = "permission_id")
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
 	private Set<Permission> permissions = new HashSet<>();
 

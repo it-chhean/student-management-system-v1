@@ -32,6 +32,9 @@ import com.kh.rupp_dev.studentmanagement.security.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Set;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -112,10 +115,12 @@ public class AuthServiceImpl implements AuthService {
 		user.setVerificationToken(token);
 		user.setVerified(false);
 
-		Role role = roleRepository.findByNameAndStatus(request.getRole(), Status.ACTIVE.name())
-						.orElseThrow(()-> new ResourceNotFoundException("Role not found with name: " + RoleName.ROLE_STAFF.name()));
+		Set<Role> role = Collections.singleton(roleRepository.findByNameAndStatus(request.getRole(), Status.ACTIVE.name())
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + RoleName.ROLE_STAFF.name())
+            )
+        );
 
-		user.setRole(role);
+		user.setRoles(role);
 		log.info("New user created: {}", user);
 		User saved = userRepository.save(user);
 		return toResponse(saved);
@@ -159,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
 	private UserResponse toResponse(User user) {
 		UserResponse response = userMapper.toResponse(user);
 		response.setRefreshToken(user.getRefreshToken().getToken());
-		response.setRole(user.getRoles());
+		response.setRoles(user.getRoles());
 		return response;
 	}
 

@@ -11,6 +11,6 @@ import java.util.List;
 public class AssignPermissionRequest {
 
     @NotNull(message = "PermissionId is required.")
-    private List<Long> permissionIds;
+    private List<Integer> permissionIds;
 
 }

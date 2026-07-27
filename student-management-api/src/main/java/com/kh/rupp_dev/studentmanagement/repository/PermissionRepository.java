@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.rupp_dev.studentmanagement.entity.Permission;
 
 @Repository
-public interface PermissionRepository extends JpaRepository<Permission, Long>{
+public interface PermissionRepository extends JpaRepository<Permission, Integer>{
 
     Optional<Permission> findByName(String name);
 
@@ -18,6 +18,6 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>{
 
     List<Permission> findByModule(String module);
 
-    Set<Permission> findByIdIn(List<Long> id);
+    Set<Permission> findByIdIn(List<Integer> id);
 
 }

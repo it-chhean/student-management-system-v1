@@ -5,7 +5,6 @@ import java.util.List;
 import com.kh.rupp_dev.studentmanagement.dto.request.AssignPermissionRequest;
 import com.kh.rupp_dev.studentmanagement.dto.request.RoleRequest;
 import com.kh.rupp_dev.studentmanagement.dto.response.RoleResponse;
-import org.apache.poi.ss.formula.eval.IntersectionEval;
 
 public interface RoleService {
 

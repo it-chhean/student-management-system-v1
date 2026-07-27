@@ -87,7 +87,7 @@ public class CourseMapper {
         return courseId != null ? courseId.getSubjectId() : null;
     }
 
-    private Long entityInstructorId(Course course) {
+    private Integer entityInstructorId(Course course) {
         User instructor = course.getInstructor();
         return instructor != null ? instructor.getId() : null;
     }

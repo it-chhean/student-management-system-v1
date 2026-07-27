@@ -135,7 +135,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found with ID: " + subjectId));
     }
 
-    private User findInstructorById(Long instructorId) {
+    private User findInstructorById(Integer instructorId) {
         return userRepository.findById(instructorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found with ID: " + instructorId));
     }

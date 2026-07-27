@@ -42,7 +42,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionResponse update(Long id, PermissionRequest request) {
+    public PermissionResponse update(Integer id, PermissionRequest request) {
         if (permissionRepository.existsByNameAndModule(request.getName(), request.getModule())) {
             throw new DuplicateResourceException("Permission already exists");
         }
@@ -57,7 +57,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Integer id) {
         Permission permission = findByOrThrow(id);
         permission.getRoles().removeIf(role -> role.getPermissions().remove(permission));
         permissionRepository.delete(permission);
@@ -72,7 +72,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionResponse getById(Long id) {
+    public PermissionResponse getById(Integer id) {
         Permission permission = findByOrThrow(id);
         return toResponse(permission);
     }
@@ -85,7 +85,7 @@ public class PermissionServiceImpl implements PermissionService {
                 .toList();
     }
 
-    private Permission findByOrThrow(Long id) {
+    private Permission findByOrThrow(Integer id) {
         return permissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found with ID: " + id));
     }
@@ -93,7 +93,7 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionResponse toResponse(Permission permission) {
         var response = permissionMapper.toResponse(permission);
         if (permission.getRoles() != null && !permission.getRoles().isEmpty()) {
-            List<Long> roleIds = permission.getRoles()
+            List<Integer> roleIds = permission.getRoles()
                     .stream()
                     .map(Role::getId)
                     .toList();
