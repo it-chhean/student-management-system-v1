@@ -209,11 +209,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public VerifyOtpResponse verifyOtp(String email, String otp) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + email));
+    public VerifyOtpResponse verifyOtp(VerifyOtpRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + request.email()));
 
-        validateOtp(user, otp);
+        validateOtp(user, request.otp());
         validationOtpExpire(user);
 
         return VerifyOtpResponse

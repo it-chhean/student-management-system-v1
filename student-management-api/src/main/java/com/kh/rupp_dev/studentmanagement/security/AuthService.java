@@ -60,7 +60,7 @@ public interface AuthService {
 
     UserResponse resetPassword(ResetPasswordRequest request);
 
-    VerifyOtpResponse verifyOtp(String email, String otp);
+    VerifyOtpResponse verifyOtp(VerifyOtpRequest request);
 
     SendOtpRespone sendResetOtp(SendOtpRequest request);
 
