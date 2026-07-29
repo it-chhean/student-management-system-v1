@@ -1,8 +1,10 @@
 package com.kh.rupp_dev.studentmanagement.filter;
 
 import com.kh.rupp_dev.studentmanagement.jwt.JwtService;
+import com.kh.rupp_dev.studentmanagement.service.AppUserDetailsService;
 import jakarta.servlet.http.Cookie;
 import org.jspecify.annotations.NonNull;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Configuration
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
@@ -48,7 +51,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 		}
 
-
 		if(token != null) {
 			userEmail = jwtService.extractEmail(token);
 
@@ -65,4 +67,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		filterChain.doFilter(request, response);
 	}
+
 }

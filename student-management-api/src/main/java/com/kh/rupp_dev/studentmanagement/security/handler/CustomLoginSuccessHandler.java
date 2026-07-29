@@ -14,9 +14,9 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     @Override
     public void onAuthenticationSuccess(
-            @NonNull HttpServletRequest request,
+            HttpServletRequest request,
             HttpServletResponse response,
-            @NonNull Authentication authentication
+            Authentication authentication
     ) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");

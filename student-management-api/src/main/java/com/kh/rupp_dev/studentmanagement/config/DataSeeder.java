@@ -11,6 +11,7 @@ import com.kh.rupp_dev.studentmanagement.repository.RoleRepository;
 import com.kh.rupp_dev.studentmanagement.repository.UserRepository;
 import com.kh.rupp_dev.studentmanagement.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -32,7 +33,7 @@ public class DataSeeder implements CommandLineRunner {
     private final JwtService jwtService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String @NonNull ... args) throws Exception {
         logger.info("Seeding data...");
 
         Permission adminRead = perm(PermissionName.ADMIN_READ.name(), "Can access GET method.", "ADMIN_MANAGEMENT");
@@ -47,14 +48,14 @@ public class DataSeeder implements CommandLineRunner {
 
         createRole("ROLE_STAFF", "Staff role with limited access.", "ACTIVE", Set.of(staffRead, staffWrite));
 
-        if (!userRepository.existsByEmail("virachamreun@gmail.com")) {
+        if (!userRepository.existsByEmail("bchhean8@gmail.com")) {
             User admin = new User();
-            admin.setFullName("Chamreun Vira");
-            admin.setEmail("virachamreun@gmail.com");
-            admin.setPassword(passwordEncoder.encode("Vira168"));
+            admin.setFullName("Bunchhean Dev");
+            admin.setEmail("bchhean8@gmail.com");
+            admin.setPassword(passwordEncoder.encode("chhean168"));
             admin.setVerified(true);
             admin.setRoles(Set.of(roleAdmin));
-            admin.setVerificationToken(jwtService.generateToken("virachamreun@gmail.com"));
+            admin.setVerificationToken(jwtService.generateToken("bchhean8@gmail.com"));
             RefreshToken refreshToken = refreshTokenService.create();
             refreshToken.setUser(admin);
             admin.setRefreshToken(refreshToken);

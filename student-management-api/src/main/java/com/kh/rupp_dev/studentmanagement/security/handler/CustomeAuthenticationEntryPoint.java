@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.rupp_dev.studentmanagement.payload.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -21,9 +20,9 @@ public class CustomeAuthenticationEntryPoint implements AuthenticationEntryPoint
 
     @Override
     public void commence(
-            @NonNull HttpServletRequest request,
+            HttpServletRequest request,
             HttpServletResponse response,
-            @NonNull AuthenticationException authException
+            AuthenticationException authException
     ) throws IOException {
         response.setContentType("application/json");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
