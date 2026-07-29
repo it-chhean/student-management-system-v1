@@ -28,4 +28,5 @@ public class CustomeAccessDeniedHandler implements AccessDeniedHandler {
         String jsonString = objectMapper.writeValueAsString(errorResponse);
         response.getWriter().write(jsonString);
     }
+
 }

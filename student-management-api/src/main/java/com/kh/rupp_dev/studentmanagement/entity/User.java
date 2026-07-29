@@ -46,12 +46,6 @@ public class User implements UserDetails {
 	@Column(name = "verified", nullable = false)
 	private boolean verified;
 
-    @Column(name = "reset_otp", nullable = false)
-    private String resetOtp;
-
-    @Column(name = "reset_otp_expire_at", nullable = false)
-    private long resetOptExpireAt;
-
 	@Column(name = "user_login_attempt")
 	private int attempt;
 
@@ -60,6 +54,12 @@ public class User implements UserDetails {
 
 	@Column(name = "user_status" , nullable = false)
 	private boolean status;
+
+    @Column(name = "reset_otp")
+    private String resetOtp;
+
+    @Column(name = "reset_otp_expire_at")
+    private Long resetOptExpireAt;
 
 	@Column(name = "created_at", nullable = false, updatable = false)
 	@CreationTimestamp
