@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AuditLogServiceImpl implements AuditLogService {
+
     private final AuditLogRepository auditLogRepository;
     private final AuditLogMapper auditLogMapper;
 
