@@ -5,6 +5,7 @@ import com.kh.rupp_dev.studentmanagement.security.handler.CustomLoginSuccessHand
 import com.kh.rupp_dev.studentmanagement.security.handler.CustomeAccessDeniedHandler;
 import com.kh.rupp_dev.studentmanagement.security.handler.CustomeAuthenticationEntryPoint;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,11 +28,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
 
@@ -40,20 +41,6 @@ public class SecurityConfig {
 	private final CustomeAccessDeniedHandler accessDeniedHandler;
 	private final CustomeAuthenticationEntryPoint authenticationEntryPoint;
 	private final CustomLoginSuccessHandler loginSuccessHandler;
-
-    public SecurityConfig(
-            UserDetailsService userDetailsService,
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomeAccessDeniedHandler accessDeniedHandler,
-            CustomeAuthenticationEntryPoint authenticationEntryPoint,
-            CustomLoginSuccessHandler loginSuccessHandler
-    ) {
-        this.userDetailsService = userDetailsService;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.accessDeniedHandler = accessDeniedHandler;
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.loginSuccessHandler = loginSuccessHandler;
-    }
 
 	private static final String[] PUBLIC_URLS = {
             "/auth/**", "/oauth2/**" , "/css/**", "/js/**",

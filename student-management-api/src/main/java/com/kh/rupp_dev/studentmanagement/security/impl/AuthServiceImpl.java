@@ -120,10 +120,15 @@ public class AuthServiceImpl implements AuthService {
 		user.setVerificationToken(token);
 		user.setVerified(false);
 
-		Set<Role> role = Collections.singleton(roleRepository.findByNameAndStatus(request.getRole(), Status.ACTIVE.name())
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found with name: " + RoleName.ROLE_STAFF.name())
-            )
-        );
+		Set<Role> role = Collections.singleton(
+			roleRepository.findByNameAndStatus(
+				request.getRole(), Status.ACTIVE.name()
+		)
+                .orElseThrow(() -> new ResourceNotFoundException(
+			"Role not found with name: " + RoleName.ROLE_STAFF.name()
+			)
+		    )
+		);
 
 		user.setRoles(role);
 		log.info("New user created: {}", user);
@@ -134,8 +139,12 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void delete(Integer id) {
 		User user = userRepository.findById(id)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+			.orElseThrow(() -> new UsernameNotFoundException(
+			"User not found with id: " + id)
+		);
+
 		log.info("Delete user with id: {}", id);
+
 		userRepository.delete(user);
 	}
 
@@ -163,7 +172,10 @@ public class AuthServiceImpl implements AuthService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         assert authentication != null;
         return userRepository.findByEmail(authentication.getName())
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with Email: " + authentication.getName()));
+				.orElseThrow(() -> new UsernameNotFoundException(
+					"User not found with Email: " + authentication.getName()
+			)
+		);
 	}
 
 	private UserResponse toResponse(User user) {
@@ -184,16 +196,17 @@ public class AuthServiceImpl implements AuthService {
 		return userMapper.toResponse(user);
 	}
 
-    @Override
-    public UserResponse changePassword(ChangePasswordRequest request) throws BadRequestException {
-        User user = this.getUserAuthenticated();
+	@Override
+    	public UserResponse changePassword(ChangePasswordRequest request) throws BadRequestException {
+		User user = this.getUserAuthenticated();
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new BadRequestException("Password don't match");
-        }
+		if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+		    throw new BadRequestException("Password don't match");
+		}
 
-        String newPasswordBCrypt = passwordEncoder.encode(request.getNewPassword());
-        user.setPassword(newPasswordBCrypt);
+		String newPasswordBCrypt = passwordEncoder.encode(request.getNewPassword());
+
+		user.setPassword(newPasswordBCrypt);
 
         return userMapper.toResponse(userRepository.save(user));
     }
