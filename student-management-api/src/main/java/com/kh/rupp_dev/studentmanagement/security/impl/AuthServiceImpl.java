@@ -32,11 +32,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
 import java.util.Set;
-
 import static java.lang.System.currentTimeMillis;
 
 @Slf4j
@@ -54,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
 
 	@Override
-	@Transactional
 	public UserResponse register(UserRequest request) {
 		return userRepository.findByEmail(request.getEmail())
 				.map(this::handleExistingUser)
@@ -198,6 +194,7 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
     	public UserResponse changePassword(ChangePasswordRequest request) throws BadRequestException {
+
 		User user = this.getUserAuthenticated();
 
 		if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
@@ -205,7 +202,6 @@ public class AuthServiceImpl implements AuthService {
 		}
 
 		String newPasswordBCrypt = passwordEncoder.encode(request.getNewPassword());
-
 		user.setPassword(newPasswordBCrypt);
 
         return userMapper.toResponse(userRepository.save(user));

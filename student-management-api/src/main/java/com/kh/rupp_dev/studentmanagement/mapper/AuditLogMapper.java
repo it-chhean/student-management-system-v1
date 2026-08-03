@@ -28,7 +28,8 @@ public class AuditLogMapper {
                 .build();
     }
 
-    private Map jsonToMap(String json) {
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> jsonToMap(String json) {
         try {
             if (json == null) {
                 return null;

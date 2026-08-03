@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Component
 public class Util {
 
     private static final List<String> IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "png");

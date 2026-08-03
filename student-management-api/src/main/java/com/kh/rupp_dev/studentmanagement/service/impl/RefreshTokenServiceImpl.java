@@ -10,22 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
-
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
-
-    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository, JwtService jwtService) {
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.jwtService = jwtService;
-    }
 
     @Value("${jwt.expiration-refresh}")
     private Long expiration;

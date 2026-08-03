@@ -81,8 +81,7 @@ public class ClassServiceImpl implements ClassService {
 		return classMapper.toResponse(clazz);
 	}
 
-	@Transactional(readOnly = true)
-	protected Class findByOrThrow(Long id) {
+	public Class findByOrThrow(Long id) {
 		return classRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Class not found with id: " + id));
 	}

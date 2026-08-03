@@ -13,12 +13,11 @@
 		<relativePath />
 	</parent>
 
-    <!--  Project Info  -->
-	<groupId>com.rupp.tola.dev</groupId>
-	<artifactId>scoring_management_system</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>scoring_management_system</name>
-	<description>Scoring Management System</description>
+    <groupId>com.kh.rupp.studentmanagement</groupId>
+    <artifactId>student-management-api</artifactId>
+    <version>1.0.0</version>
+    <name>student-management-api</name>
+    <description>Enterprise Student Management System REST API</description>
 
     <!--  Properties  -->
 	<properties>

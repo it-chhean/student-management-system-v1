@@ -23,7 +23,6 @@ import java.util.Set;
 @Configuration
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
-    Logger logger = LoggerFactory.getLogger(DataSeeder.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -32,8 +31,11 @@ public class DataSeeder implements CommandLineRunner {
     private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
 
+    Logger logger = LoggerFactory.getLogger(DataSeeder.class);
+
     @Override
-    public void run(String @NonNull ... args) throws Exception {
+    public void run(String @NonNull ... args) {
+
         logger.info("Seeding data...");
 
         Permission adminRead = perm(PermissionName.ADMIN_READ.name(), "Can access GET method.", "ADMIN_MANAGEMENT");
@@ -52,7 +54,7 @@ public class DataSeeder implements CommandLineRunner {
             User admin = new User();
             admin.setFullName("Bunchhean Dev");
             admin.setEmail("bchhean8@gmail.com");
-            admin.setPassword(passwordEncoder.encode("chhean168"));
+            admin.setPassword("chhean168");
             admin.setVerified(true);
             admin.setRoles(Set.of(roleAdmin));
             admin.setVerificationToken(jwtService.generateToken("bchhean8@gmail.com"));

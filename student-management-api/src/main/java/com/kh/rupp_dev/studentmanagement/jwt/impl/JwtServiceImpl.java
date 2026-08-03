@@ -4,11 +4,9 @@ import com.kh.rupp_dev.studentmanagement.jwt.JwtConfig;
 import com.kh.rupp_dev.studentmanagement.jwt.JwtService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +15,11 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtServiceImpl extends JwtConfig implements JwtService {
+
+    public JwtServiceImpl() {
+        super();
+    }
 
     @Override
     public SecretKey getSigningKey() {

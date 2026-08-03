@@ -17,12 +17,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AttendanceController {
 
-    private final AttendanceService service;
+    private final AttendanceService attendanceService;
 
     @PostMapping("/schedule")
     public ResponseEntity<?> createSchedule(@RequestBody CreateScheduleRequest request) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.createSchedule(request));
+            return ResponseEntity.status(HttpStatus.CREATED).body(attendanceService.createSchedule(request));
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
@@ -35,7 +35,7 @@ public class AttendanceController {
     ){
         try {
             String instructureId = userDetails.getUsername();
-            return ResponseEntity.ok(service.startSession(request, instructureId));
+            return ResponseEntity.ok(attendanceService.startSession(request, instructureId));
         }catch (IllegalStateException e)  {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("error", "INVALID_REQUEST", "message", e.getMessage()));
@@ -51,7 +51,7 @@ public class AttendanceController {
             @AuthenticationPrincipal UserDetails userDetails
     ){
         try {
-            service.closeSession(id, userDetails.getUsername());
+            attendanceService.closeSession(id, userDetails.getUsername());
             return ResponseEntity.ok(Map.of("message", "Session closed successfully."));
         }catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)

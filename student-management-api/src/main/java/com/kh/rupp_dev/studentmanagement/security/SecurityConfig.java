@@ -1,10 +1,8 @@
 package com.kh.rupp_dev.studentmanagement.security;
 
 import com.kh.rupp_dev.studentmanagement.filter.JwtAuthenticationFilter;
-import com.kh.rupp_dev.studentmanagement.security.handler.CustomLoginSuccessHandler;
-import com.kh.rupp_dev.studentmanagement.security.handler.CustomeAccessDeniedHandler;
-import com.kh.rupp_dev.studentmanagement.security.handler.CustomeAuthenticationEntryPoint;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +26,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -38,9 +35,6 @@ public class SecurityConfig {
 
 	private final UserDetailsService userDetailsService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final CustomeAccessDeniedHandler accessDeniedHandler;
-	private final CustomeAuthenticationEntryPoint authenticationEntryPoint;
-	private final CustomLoginSuccessHandler loginSuccessHandler;
 
 	private static final String[] PUBLIC_URLS = {
             "/auth/**", "/oauth2/**" , "/css/**", "/js/**",
@@ -49,23 +43,19 @@ public class SecurityConfig {
             "/webjars/**" , "/uploads/**"
     };
 
-    @Value("${app.cors.allowed-origins}")
-    private List<String> allowedOrigins;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Value("${app.cors.allowed-origins}")
+    private List<String> allowedOrigins;
+
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
 				.csrf(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
-				.formLogin(login -> {
-					login.successHandler(loginSuccessHandler);
-					login.disable();
-				})
 				.cors(cors -> cors
                         .configurationSource(configurationSource())
                 )
@@ -87,25 +77,21 @@ public class SecurityConfig {
 								.requestMatchers("/api/v1/scores/**").hasAnyRole("ADMIN", "STAFF")
 								.anyRequest().authenticated())
 				.authenticationProvider(authenticationProvider())
-				.exceptionHandling(ex -> {
-					ex.authenticationEntryPoint(authenticationEntryPoint);
-					ex.accessDeniedHandler(accessDeniedHandler);
-				})
-				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-		return provider;
+        return provider;
 	}
 
 	@Bean

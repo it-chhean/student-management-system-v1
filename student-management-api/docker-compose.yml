@@ -12,15 +12,15 @@ services:
       - pg_data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  redis:
-    container_name: sms_redis
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
+#  redis:
+#    container_name: sms_redis
+#    image: redis:latest
+#    ports:
+#      - "6378:6379"
+#    volumes:
+#      - redis_data:/data
+#    restart: unless-stopped
 
 volumes:
   pg_data:
-  redis_data:
+#  redis_data:
